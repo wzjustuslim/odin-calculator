@@ -40,56 +40,115 @@ function operate(x, y, operator) {
   }
 }
 
+const cache = []
 const memory = []
-const value = ['0']
-const lastOperation = []
+const lastEval = []
 const display = document.getElementsByClassName('display')[0]
+const operations = ['+', '-', '*', '/']
 
 Array.from(document.getElementsByClassName('clear')).forEach((el) => {
   el.addEventListener('click', () => {
+    cache.length = 0
     memory.length = 0
-    value.length = 0
-    value.push('0')
-    lastOperation.length = 0
-    setDisplay()
-    verify()
+    lastEval.length = 0
   })
 })
 
 Array.from(document.getElementsByClassName('dot')).forEach((el) => {
   el.addEventListener('click', () => {
-    if (value.includes(el.textContent)) {
-      verify()
-      return
-    }
-    value.push(el.textContent)
-    setDisplay()
-    verify()
+    const dot = el.textContent
+    if (!cache.length) cache.push('0')
+    if (cache.includes(dot)) return
+    cache.push(dot)
   })
 })
 
 Array.from(document.getElementsByClassName('number')).forEach((el) => {
   el.addEventListener('click', () => {
-    value.push(el.textContent)
-    if (value[0] === '0' && value[1] === el.textContent) value.shift()
-    setDisplay()
-    verify()
+    const number = el.textContent
+    cache.push(number)
+    if (cache[0] === '0' && cache[1] === number) cache.shift()
   })
 })
 
 Array.from(document.getElementsByClassName('operator')).forEach((el) => {
   el.addEventListener('click', () => {
-    
-    console.log('value', value)
-    console.log('memory', memory)
+    verify()
+    // stored operator
+    const operator = el.textContent
+
+    // push input to memory
+    if (cache.length) {
+      memory.push(cache.join(''))
+      cache.length = 0
+    }
+
+    // qualify to calculate if enough parts
+    if (memory.length === 3) calculate()
+
+    // handle replace or add operator to memory
+    if (memory.length) {      
+      if (operations.some(i => memory.includes(i))) {
+        const index = memory.findIndex(j => operations.includes(j))
+        memory[index] = operator
+      } else {
+        memory.push(operator)
+      }
+    }
+
+    // remove result if operator at the end
+    if (memory.length === 3) memory.shift()
+    verify()
   })
 })
 
-function verify() {
-  console.log('value', value)
-  console.log('memory', memory)
+Array.from(document.getElementsByClassName('equal')).forEach((el) => {
+  el.addEventListener('click', () => {
+    if (cache.length) {
+      memory.push(cache.join(''))
+      cache.length = 0
+    }
+
+    if (memory.length === 2 && operations.some(i => memory.includes(i))) {
+      memory.push(memory[0])
+    }
+
+    if (memory.length === 2 && !operations.some(i => memory.includes(i))) {
+      memory.shift()
+    }
+
+    if (memory.length === 1 && lastEval.length) {
+      memory.push(lastEval[0])
+      memory.push(lastEval[1])
+    }
+
+    if (memory.length === 3) calculate()
+
+    verify()
+  })
+})
+
+function calculate() {
+  if (memory.length === 3) {
+    const result = operate(memory[0], memory[2], memory[1])
+    lastEval.length = 0
+    lastEval.push(memory[1])
+    lastEval.push(memory[2])
+    memory.length = 0
+    memory.push(result.toString())
+  }
 }
 
-function setDisplay() {
-  display.textContent = value.join('')
+function verify() {
+  console.log('cache', cache)
+  console.log('memory', memory)
+  console.log('lastEval', lastEval)
+}
+
+function setDisplay(string) {
+  if (string) {
+    display.textContent = string
+  } else {
+    display.textContent = 0
+  }
 }
