@@ -212,15 +212,3 @@ document.addEventListener('keydown', (e) => {
 })
 
 setDisplay()
-
-// 5 inv => -5
-// cache = 0 / memo = 1 / memo excl ops
-
-// 2 inv => -2
-// cache = 1 / memo = 0 / memo excl ops
-
-// 5 inv => && memo incl ops 1 inv = -6
-
-// if no cache invert memo
-// if no memo invert cache
-// if memo and cache invert cache
