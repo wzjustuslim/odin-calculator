@@ -47,6 +47,23 @@ const display = document.getElementsByClassName('display')[0]
 const operators = ['+', '-', '*', '/']
 const integers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+function handleDelete() {
+  if (cache.length) {
+    cache.pop()
+    if (cache.length) {
+      setDisplay(cache.join(''))
+    } else {
+      setDisplay()
+    }
+  }
+}
+
+Array.from(document.getElementsByClassName('delete')).forEach((el) => {
+  el.addEventListener('click', () => {
+    handleDelete()
+  })
+})
+
 function handleClear() {
   cache.length = 0
   memory.length = 0
@@ -188,6 +205,9 @@ document.addEventListener('keydown', (e) => {
   }
   if (e.key === 'Escape') {
     handleClear()
+  }
+  if (e.key === 'Backspace') {
+    handleDelete()
   }
 })
 
