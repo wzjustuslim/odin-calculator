@@ -3,6 +3,7 @@ body * {
 }
 
 button {
+  border: 0 ;
   padding: 0;
 }
 
@@ -12,11 +13,14 @@ button {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .row {
   flex: 1;
   display: flex;
+  gap: 1px;
 }
 
 .cell {
@@ -24,10 +28,47 @@ button {
 }
 
 .zero {
+  /* correction for weird flex-sizing */
+  padding-left: 1px; 
   flex: 2;
 }
 
 .display {
   flex: 1;
-  border: 1px solid;
+  padding: 8px;
+  font-size: 48px;
+  background-color: black;
+  color: white;
+  opacity: 0.7;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.equal, .operator {
+  background-color: hsl(39, 100%, 50%);
+  color: white;
+  font-size: 24px;
+}
+
+.equal:active, .operator:active {
+  background-color: hsl(39, 100%, 40%);
+}
+
+.clear, .invert, .delete, .dot, .number {
+  background-color: hsl(0, 0%, 0%);
+  color: white;
+}
+
+.clear:active, .invert:active, .delete:active, .dot:active, .number:active {
+  background-color: hsl(0, 0%, 30%);
+}
+
+.dot, .number {
+  opacity: 0.5;
+  font-size: 24px;
+}
+
+.clear, .invert, .delete {
+  opacity: 0.6;
+  font-size: 16px;
 }
