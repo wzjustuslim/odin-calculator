@@ -159,6 +159,30 @@ Array.from(document.getElementsByClassName('equal')).forEach((el) => {
   })
 })
 
+function handleInvert() {
+  if (memory.length && !cache.length) {
+    const operand = parseFloat(memory[0]) * -1
+    memory[0] = operand.toString()
+    setDisplay(operand.toString())
+    return
+  }
+  if (!cache.length || cache[0] === '0') return
+  if (cache[0] === '-') {
+    cache.shift()
+    setDisplay(cache.join(''))
+  } else {
+    cache.unshift('-')
+    setDisplay(cache.join(''))
+  }
+  verify()
+}
+
+Array.from(document.getElementsByClassName('invert')).forEach((el) => {
+  el.addEventListener('click', () => {
+    handleInvert()
+  })
+})
+
 function calculate() {
   if (memory.length === 3) {
     const result = operate(memory[0], memory[2], memory[1]).toString()
