@@ -150,6 +150,10 @@ function verify() {
 }
 
 function setDisplay(string) {
+  if (string === 'NaN') {
+    display.textContent = 'To infinity and beyond!'
+    return
+  }
   if (string) {
     display.textContent = string
     return
