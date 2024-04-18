@@ -51,6 +51,7 @@ Array.from(document.getElementsByClassName('clear')).forEach((el) => {
     cache.length = 0
     memory.length = 0
     lastEval.length = 0
+    setDisplay()
   })
 })
 
@@ -60,6 +61,7 @@ Array.from(document.getElementsByClassName('dot')).forEach((el) => {
     if (!cache.length) cache.push('0')
     if (cache.includes(dot)) return
     cache.push(dot)
+    setDisplay(cache.join(''))
   })
 })
 
@@ -68,6 +70,7 @@ Array.from(document.getElementsByClassName('number')).forEach((el) => {
     const number = el.textContent
     cache.push(number)
     if (cache[0] === '0' && cache[1] === number) cache.shift()
+    setDisplay(cache.join(''))
   })
 })
 
@@ -130,12 +133,13 @@ Array.from(document.getElementsByClassName('equal')).forEach((el) => {
 
 function calculate() {
   if (memory.length === 3) {
-    const result = operate(memory[0], memory[2], memory[1])
+    const result = operate(memory[0], memory[2], memory[1]).toString()
+    setDisplay(result)
     lastEval.length = 0
     lastEval.push(memory[1])
     lastEval.push(memory[2])
     memory.length = 0
-    memory.push(result.toString())
+    memory.push(result)
   }
 }
 
@@ -148,7 +152,21 @@ function verify() {
 function setDisplay(string) {
   if (string) {
     display.textContent = string
-  } else {
-    display.textContent = 0
+    return
   }
+  display.textContent = '0'
 }
+
+setDisplay()
+
+// 5 inv => -5
+// cache = 0 / memo = 1 / memo excl ops
+
+// 2 inv => -2
+// cache = 1 / memo = 0 / memo excl ops
+
+// 5 inv => && memo incl ops 1 inv = -6
+
+// if no cache invert memo
+// if no memo invert cache
+// if memo and cache invert cache
